@@ -94,6 +94,19 @@ def drinks_detail():
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
         or appropriate status code indicating reason for failure
 '''
+# EXAMPLE: 
+# {
+#     "title": "Bleh1",
+#     "recipe": [{
+#         "name": "Water",
+#         "color": "blue",
+#         "parts": 2
+#     },{
+#         "name": "Milk",
+#         "color": "white",
+#         "parts": 1
+#     }]
+# }
 @app.route('/drinks', methods=['POST'])
 def new_drink():
     body = request.get_json()
@@ -112,19 +125,6 @@ def new_drink():
         }), 200
     except:
         abort(422)
-# a test: 
-# {
-#     "title": "Bleh1",
-#     "recipe": [{
-#         "name": "Water",
-#         "color": "blue",
-#         "parts": 2
-#     },{
-#         "name": "Milk",
-#         "color": "white",
-#         "parts": 1
-#     }]
-# }
 
 
 '''
@@ -196,13 +196,13 @@ def delete_drink(drink_id):
 
 '''
 
-@app.errorhandler(422)
-def unprocessable(error):
+@app.errorhandler(400)
+def bad_request(error):
     return jsonify({
-                    "success": False, 
-                    "error": 422,
-                    "message": "unprocessable"
-                    }), 422
+                    "success": False,
+                    "error": 400,
+                    "message": "Bad request"
+                    }), 400
 
 @app.errorhandler(404)
 def not_found(error):
@@ -211,6 +211,31 @@ def not_found(error):
                     "error": 404,
                     "message": "not found"
                     }), 404
+                    
+@app.errorhandler(405)
+def method_not_allowed(error):
+    return jsonify({
+                    "success": False, 
+                    "error": 405,
+                    "message": "method not allowed"
+                    }), 405
+
+@app.errorhandler(422)
+def unprocessable(error):
+    return jsonify({
+                    "success": False, 
+                    "error": 422,
+                    "message": "unprocessable"
+                    }), 422
+                    
+@app.errorhandler(500)
+def server_error(error):
+    return jsonify({
+                    "success": False, 
+                    "error": 500,
+                    "message": "internal server error"
+                    }), 500
+
 
 
 '''
