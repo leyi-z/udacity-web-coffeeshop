@@ -8,7 +8,6 @@ from .database.models import db_drop_and_create_all, setup_db, Drink
 from .auth.auth import AuthError, requires_auth
 
 
-
 app = Flask(__name__)
 setup_db(app)
 CORS(app)
@@ -27,8 +26,7 @@ def after_request(response):
     return response
 
 
-#db_drop_and_create_all()
-
+# db_drop_and_create_all()
 
 
 ##########
@@ -41,8 +39,7 @@ def greeting_all():
     return jsonify({
         "greetings": 'bleh!'
     })
-    
-    
+
 
 @app.route('/drinks', methods=['GET'])
 def drinks_all():
@@ -58,7 +55,6 @@ def drinks_all():
         abort(404)
 
 
-
 @app.route('/drinks-detail', methods=['GET'])
 @requires_auth('get:drinks-detail')
 def drinks_detail(jwt):
@@ -72,7 +68,6 @@ def drinks_detail(jwt):
     except Exception as e:
         print(e)
         abort(404)
-
 
 
 @app.route('/drinks', methods=['POST'])
@@ -97,7 +92,6 @@ def new_drink(jwt):
         abort(422)
 
 
-
 @app.route('/drinks/<int:drink_id>', methods=['PATCH'])
 @requires_auth('patch:drinks')
 def update_drink(jwt, drink_id):
@@ -105,7 +99,9 @@ def update_drink(jwt, drink_id):
     new_title = body.get('title', None)
     new_recipe = body.get('recipe', None)
     new_recipe = json.dumps(new_recipe)
-    drink = Drink.query.filter(Drink.id == drink_id).order_by(Drink.id).one_or_none()
+    drink = Drink.query.filter(
+        Drink.id == drink_id).order_by(
+        Drink.id).one_or_none()
     try:
         drink.title = new_title
         drink.recipe = new_recipe
@@ -119,11 +115,12 @@ def update_drink(jwt, drink_id):
         abort(422)
 
 
-
 @app.route('/drinks/<int:drink_id>', methods=['DELETE'])
 @requires_auth('delete:drinks')
 def delete_drink(jwt, drink_id):
-    drink = Drink.query.filter(Drink.id == drink_id).order_by(Drink.id).one_or_none()
+    drink = Drink.query.filter(
+        Drink.id == drink_id).order_by(
+        Drink.id).one_or_none()
     try:
         drink.delete()
         return jsonify({
@@ -135,7 +132,6 @@ def delete_drink(jwt, drink_id):
         abort(422)
 
 
-
 ##################
 # Error Handling #
 ###################
@@ -144,57 +140,61 @@ def delete_drink(jwt, drink_id):
 @app.errorhandler(400)
 def bad_request(error):
     return jsonify({
-                    "success": False,
-                    "error": 400,
-                    "message": "Bad request"
-                    }), 400
-                    
+        "success": False,
+        "error": 400,
+        "message": "Bad request"
+    }), 400
+
+
 @app.errorhandler(401)
 def unauthorized(error):
     return jsonify({
-                    "success": False, 
-                    "error": 401,
-                    "message": "unauthorized"
-                    }), 401
+        "success": False,
+        "error": 401,
+        "message": "unauthorized"
+    }), 401
+
 
 @app.errorhandler(404)
 def not_found(error):
     return jsonify({
-                    "success": False, 
-                    "error": 404,
-                    "message": "not found"
-                    }), 404
-                    
+        "success": False,
+        "error": 404,
+        "message": "not found"
+    }), 404
+
+
 @app.errorhandler(405)
 def method_not_allowed(error):
     return jsonify({
-                    "success": False, 
-                    "error": 405,
-                    "message": "method not allowed"
-                    }), 405
+        "success": False,
+        "error": 405,
+        "message": "method not allowed"
+    }), 405
+
 
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
-                    "success": False, 
-                    "error": 422,
-                    "message": "unprocessable"
-                    }), 422
-                    
+        "success": False,
+        "error": 422,
+        "message": "unprocessable"
+    }), 422
+
+
 @app.errorhandler(500)
 def server_error(error):
     return jsonify({
-                    "success": False, 
-                    "error": 500,
-                    "message": "internal server error"
-                    }), 500
+        "success": False,
+        "error": 500,
+        "message": "internal server error"
+    }), 500
 
-        
+
 @app.errorhandler(AuthError)
 def auth_error(error):
     return jsonify({
-                    "success": False, 
-                    "error": 401,
-                    "message": "unauthorized"
-                    }), 401
-
+        "success": False,
+        "error": 401,
+        "message": "unauthorized"
+    }), 401
