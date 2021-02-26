@@ -1,0 +1,12 @@
+
+# generated files
+**/.DS_Store
+**/__pycache__
+
+
+# instructions and plans
+misc/
+
+
+# node modules
+frontend/node_modules
